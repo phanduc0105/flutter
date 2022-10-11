@@ -11,23 +11,36 @@ class DemoApp extends StatefulWidget{
   }
 }
 
-class _DemoApp extends State<DemoApp>{
+class _DemoApp extends State<DemoApp> with WidgetsBindingObserver{
   @override
   Widget build(BuildContext context) {
-
-    String _key;
-    final myController = TextEditingController();
+    final editText1 = TextEditingController();
+    final editText2 = TextEditingController();
 
     @override
     void initState() {
       super.initState();
-
+      WidgetsBinding.instance.addObserver(this);
     }
 
     @override
     void dispose() {
-      myController.dispose();
+      editText1.dispose();
+      editText2.dispose();
+      WidgetsBinding.instance.removeObserver(this);
       super.dispose();
+    }
+
+    @override
+    void didChangeAppLifecycleState(AppLifecycleState state){
+      super.didChangeAppLifecycleState(state);
+
+      //Background mode
+      if(state == AppLifecycleState.paused){
+
+      }else{
+
+      }
     }
 
     // TODO: implement build
@@ -45,8 +58,9 @@ class _DemoApp extends State<DemoApp>{
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                 child: TextField(
+                  controller: editText1,
                   onChanged: (text){
-                    myController.text = text;
+                    editText2.text = text;
                   },
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(
@@ -61,7 +75,12 @@ class _DemoApp extends State<DemoApp>{
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                 child: TextField(
-                  controller: myController,
+                  controller: editText2,
+                  onTap: (){
+                    String text2Temp = editText2.text;
+                    editText1.text = "";
+                    editText2.text = text2Temp;
+                  },
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
